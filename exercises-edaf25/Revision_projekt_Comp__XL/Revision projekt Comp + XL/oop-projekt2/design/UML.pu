@@ -1,0 +1,280 @@
+@startuml ProjektXL
+
+package expr {
+    interface Expr{
+        +value(Environment env) : double
+        +toString() : String
+    }
+
+
+    class BinaryExpr extends Expr{
+        +BinaryExpr(Expr) : void
+        +value(env) : double
+        +toString() : String
+    }
+
+    class Add extends BinaryExpr{
+        +Add(expr1, expr2) : void
+        +op(op1, op2) : double
+        +opString() : String
+    }
+
+    class Sub extends BinaryExpr{
+        +Sub(expr1, expr2) : void
+        +op(op1, op2) : double
+        +opString() : String
+    }
+
+
+    class Div extends BinaryExpr{
+        +Div(expr1, expr2) : void
+        +op(op1, op2) : double
+        +opString() : String
+    }
+
+
+    class Mul extends BinaryExpr{
+        +Mul(expr1, expr2) : void
+        +op(op1, op2) : double
+        +opString() : String
+    }
+
+
+    interface Environment{
+        +value(String) : double
+    }
+
+
+
+    class ExprParser{
+        +build() : Expr
+        -expr() : Expr
+        -factor() : Expr
+        -term() : Expr
+    }
+
+
+
+
+    class Num extends Expr{
+        +Num(double) : void
+        +value(Environment env) : double
+        +toString(int prec) : String
+    }
+
+
+    class Variable extends Expr{
+        +Variable(String name) : void
+        +value(Environment env) : double
+        +toString() : String
+    }
+
+    class TestExpr{
+        +main(String[]) : void
+    }
+
+    ' Environment .. Expr
+}
+
+package gui {
+    class BorderPanel{}
+
+
+    class ColoredLabel{}
+
+
+    class CurrentLabel{}
+
+    class Editor{
+        -editor : Editor
+    }
+
+
+    class GridPanel{}
+
+
+    class RowLabels{}
+
+
+    class SheetPanel{}
+
+
+    class SlotLabel{}
+
+
+    class SlotLabels{
+        -labelList : List<SlotLabel>
+    }
+
+
+    class StatusLabel{
+        +update(Observable observable, Object object) : void
+    }
+
+
+    class StatusPanel{}
+
+
+    class XL{}
+
+
+    class XLCounter{
+        -counter : int;
+        +increment() : void
+        +toString() : String
+    }
+
+    class XLList{
+        -list : List<XL>
+        +isEmpty() : boolean
+        +iterator() : Iterator<XL>
+        +last() : XL
+        +remove(xl : XL) : void
+        +setChanged() : void
+    }
+
+    package menu {
+        class ClearAllMenuItem{
+            +actionPerformed(e : ActionEvent): void
+        }
+
+	
+        class ClearMenuItem{
+            +actionPerformed(e : ActionPerEvent) : void
+        }
+
+            
+        class CloseMenuItem{
+            -xl : XL
+            -xlList : XLList
+            +actionPerformed(event : ActionEvent) : void
+        }
+
+
+        class LoadMenuItem extends OpenMenuItem{
+            +action(path : String) : void
+            +openDialog(fileChooser : JFileChooser) : int
+        }
+
+
+        class NewMenuItem{
+            -xl : XL
+            +actionPerformed(event : ActionEvent) : void
+        }
+
+
+        class OpenMenuItem{
+            -statusLabel : StatusLabel
+            -xl : XL
+            +action(path : String) : void
+            +actionPerformed(event : ActionEvent) : void
+            +openDialog(fileChooser : JFileChooser) : int
+        }
+
+
+        class SaveMenuItem{
+            +action(path : String) : void
+            +openDialog(fileChooser : JFileChooser) : int
+        }
+
+
+        class WindowMenu{
+            -xlList : XLList
+            +update(observable : Observable, object : Object) : void
+        }
+
+
+        class WindowMenuItem{
+            -xl : XL
+            +actionPerformed(event : ActionEvent) : void
+        }
+
+            
+        class XLMenuBar extends JMenuBar{
+        }
+    }
+}
+
+
+
+package util {
+    class Adjustment{
+        - width : int
+        + center(s : String) : String
+        + left(s : String) : String
+        + right(s : String) : String
+        + right(c : Char) : String
+        + right (number : Float) : String
+        + right(number : int) : String
+        + right(number : Long) : String
+        + right(item : Object) : String
+        + right(s : String) : String
+    }
+        
+	
+    class NumberAdjustment{
+        - log10 : double
+        - decimals : int
+        - exponent : int  
+        + fillZero(exp : int)
+        + format(number : double)
+        + right(number : double)
+        + main(String[])
+    }
+
+           
+    class XLBufferedReader{
+        + load(map : Map<String, Object>) : void
+    }
+
+
+        class XLException{}
+
+
+    class XLPrintStream{
+        + save(set : Set<Entry<String, Object>>) void
+    }
+
+
+    class Sheet extends Observable{
+        + map : Map<String, Cell>
+        + put(String : String, Cell : Cell) : void
+        + getValue(String : String) : String
+        + getExpr(String : String) : Expr
+        + value(String : String) : String
+        + load(String: path) : void
+        + save(String: path) : void
+        + toString() : String
+    }
+
+    class Observable extends java.util.Observable{
+        + setChanged() : void
+        + notifyObservers() : void
+        + addObserver(Observer : Observer) : void
+    }
+
+    class Cell {
+        + getValue() : String
+        + getExpr() : Expr
+        + value(Environment) : double
+    }
+
+    class Commentcell extends Cell {
+        + Comment : String
+    }
+
+    class Exprcell extends Cell {
+        + Expr : Expr
+    }
+
+    class Bombcell extends Cell {
+        + Bomb : VAD SKA DENNA GÖRA???? Ge felmeddelande?
+    }
+
+}
+
+
+util .. expr
+gui ..> expr
+gui ..> util
+@enduml

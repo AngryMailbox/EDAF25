@@ -1,0 +1,161 @@
+@startuml classdiagram
+title Klassdiagram för en dator
+
+package computer {
+
+    Interface Memory {
+        +LongWord read(Address address)
+        +void write(Address address, LongWord value)
+    }
+
+    Interface Program {
+        +void add(Instruction instruction)
+        +int size()
+        +Instruction get(int index)
+        +String toString()
+    }
+
+    Class LongMemory extends Memory {
+        -LongWord[] memory
+        +LongWord read(Address address)
+        +void write(Address address, LongWord value)
+        +toString()
+    }
+
+    Class LongWord extends Word {
+        -long value
+        +LongWord(long value)
+        +long getValue()
+        +void setValue(long value)
+        +String toString()
+    }
+
+    interface Word<E> {
+        +setValue(E value)
+        +E getValue()
+    }
+
+    Class Address {
+        -int value
+        +Address(int value)
+        +int getValue()
+        +void setValue(int value)
+        +String toString()
+    }
+
+    Class Counter {
+        -int value
+        +int getValue()
+        +void setValue(int value)
+    }
+
+    class Computer {
+        -Memory memory
+        -Program program
+        -Counter counter
+        +Computer(Memory memory)
+        +void load(Program program)
+        +void run()
+    }
+
+    abstract class AbstractProgram extends Program{
+        +add(Instruction instruction)
+        +size()
+        +get(int index)
+        +toString()
+    }
+    
+    interface Operand {
+        +int getValue(Memory memory, Program program, Counter counter)
+        +void setValue(Memory memory, Program program, Counter counter, int value)
+        +String toString()
+    }
+
+    class LongWordOperand extends Operand {
+        -LongWord value
+        +LongWordOperand(LongWord value)
+        +int getValue(Memory memory, Program program, Counter counter)
+        +void setValue(Memory memory, Program program, Counter counter, int value)
+        +String toString()
+    }
+}
+
+package instructions {
+    interface Instruction {
+        +void execute(Memory memory, Program program, Counter counter)
+        +String toString()
+    }
+
+    Class Copy extends Instruction {
+        - Operand op1;
+        - Address address;
+        +Copy(LongWord longWord, Address n)
+        +void execute(Memory memory, Program program, Counter counter)
+        +String toString()
+    }
+
+    Class Mul extends Instruction{
+        - Address fac;
+    - Address n;
+    - Address address;
+        +Mul(Address fac, Address n, Address address)
+        +void execute(Memory memory, Program program, Counter counter)
+        +String toString()
+    }
+
+    Class Add extends Instruction{
+        - Address n;
+        - LongWord longWord;
+         - Address address;
+        +Add(Address n, LongWord longWord, Address address)
+        +void execute(Memory memory, Program program, Counter counter)
+        +String toString()
+    }
+
+    Class Jump extends Instruction{
+        -int lineNumber
+        +Jump(int lineNumber)
+        +void execute(Memory memory, Program program, Counter counter)
+        +String toString()
+    }
+
+    Class JumpEq extends Instruction{
+        - int lineNumber;
+        - Address n;
+        - LongWord longWord;
+        +JumpEq(int lineNumber, Address n, LongWord longWord)
+        +void execute(Memory memory, Program program, Counter counter)
+        +String toString()
+    }
+
+    Class Print extends Instruction{
+        -Address address
+        +Print(Address address)
+        +void execute(Memory memory, Program program, Counter counter)
+        +String toString()
+    }
+
+    Class Halt extends Instruction{
+        +void execute(Memory memory, Program program, Counter counter)
+        +String toString()
+    }
+}
+
+package test {
+    class Factorial extends AbstractProgram {
+        +Factorial()
+        +void add(Instruction instruction)
+        +LongWord[] getData()
+    }
+
+    class Main {
+        +main(String[] args)
+    }
+}
+
+
+test .. computer
+test .. instructions
+computer .. instructions
+Main .. Factorial
+@enduml
